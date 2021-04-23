@@ -1,8 +1,8 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useRef} from 'react'
 import './App.scss';
 import Cubes from './Cubes'
 import Header from './components/Header'
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei'
 import { Section } from './section';
 import { useGLTF } from '@react-three/drei';
@@ -19,15 +19,23 @@ const Model = () => {
 const Lights = () => {
   return (
     <>
-    <directionalLight intensity={1} position={[10,10,5]}/>
-      <directionalLight intensity={1.5} position={[0,10,0]}/>
-      <spotLight intensity={1} position={[1000,0,0]}/>
+      <directionalLight intensity={1} position={[10, 10, 5]} />
+      <directionalLight intensity={1.5} position={[0, 10, 0]} />
+      <spotLight intensity={1} position={[1000, 0, 0]} />
       <ambientLight intensity={0.3} />
     </>
   )
 };
 
 const HTMLcontent = () => {
+   //ref to target the mesh
+   const ref = useRef();
+
+   //useFrame allows us to re-render/update rotation on each frame
+   useFrame(() => (ref.current.rotation.y += 0.01));
+ 
+
+
   return (
     <Section
       factor={1.5}
@@ -64,8 +72,10 @@ function App() {
 
         <Lights />
         <Suspense fallback={null}>
+
           <HTMLcontent />
         </Suspense>
+
       </Canvas>
       {/* <Cubes/> */}
     </>
